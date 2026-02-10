@@ -1,2 +1,828 @@
-# Invitacion_SV
-San Valentin
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación Especial de San Valentín</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fff0f3, #ffe6ea);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #c44569;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 28px;
+        }
+        
+        /* Estilo para el sobre */
+        .envelope {
+            width: 320px;
+            height: 220px;
+            background-color: #e66767;
+            margin: 0 auto 30px;
+            position: relative;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(230, 103, 103, 0.25);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 10;
+        }
+        
+        .envelope:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(230, 103, 103, 0.35);
+        }
+        
+        .envelope:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            border-width: 110px 160px 0 160px;
+            border-style: solid;
+            border-color: #cf6a6a transparent transparent transparent;
+            z-index: 2;
+        }
+        
+        .envelope:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f8a5c2;
+            border-radius: 12px;
+            z-index: 1;
+        }
+        
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 110px solid #cf6a6a;
+            border-radius: 12px 12px 0 0;
+            transform-origin: top;
+            transition: transform 0.9s ease;
+            z-index: 3;
+        }
+        
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            z-index: 4;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.25);
+            letter-spacing: 1px;
+        }
+        
+        /* Estilo para la carta que sale del sobre */
+        .letter {
+            width: 320px;
+            min-height: 220px;
+            background-color: #fff;
+            margin: -200px auto 30px;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: scale(0);
+            transition: transform 0.9s ease, margin 0.9s ease;
+            position: relative;
+            z-index: 5;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .letter.show {
+            transform: scale(1);
+            margin-top: 25px;
+        }
+        
+        /* Contenedor del frasco con rosa mejorada */
+        .jar-container {
+            width: 200px;
+            height: 220px;
+            margin: 0 auto 25px;
+            position: relative;
+            transform: scale(0);
+            transition: transform 1.2s ease;
+            transition-delay: 0.4s;
+        }
+        
+        .letter.show .jar-container {
+            transform: scale(1);
+        }
+        
+        /* Frasco de vidrio mejorado */
+        .jar {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 170px;
+            background: linear-gradient(to bottom, rgba(173, 216, 230, 0.15) 0%, rgba(173, 216, 230, 0.25) 100%);
+            border-radius: 10px 10px 45px 45px;
+            border: 3px solid rgba(120, 120, 120, 0.15);
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.08),
+                0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Agua dentro del frasco */
+        .water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 75%;
+            background: linear-gradient(to bottom, 
+                rgba(135, 206, 250, 0.5) 0%, 
+                rgba(173, 216, 230, 0.7) 30%,
+                rgba(135, 206, 250, 0.8) 100%);
+            border-radius: 0 0 40px 40px;
+        }
+        
+        /* ROSA MEJORADA - Versión mucho más realista */
+        .rose-in-jar {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 120px;
+            z-index: 2;
+        }
+        
+        /* Tallo de la rosa */
+        .rose-stem {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 90px;
+            background: linear-gradient(to right, #2b5e25, #367c2e, #2b5e25);
+            border-radius: 3px;
+            box-shadow: 
+                0 0 5px rgba(43, 94, 37, 0.5),
+                inset 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Centro de la rosa */
+        .rose-center {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(45deg, #8b0000, #b22222);
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 
+                0 0 10px rgba(139, 0, 0, 0.4),
+                inset 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Capas de pétalos para una rosa más realista */
+        .petal-layer {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Pétalos internos (más pequeños y enrollados) */
+        .inner-petals {
+            width: 45px;
+            height: 45px;
+            position: relative;
+        }
+        
+        .inner-petal {
+            position: absolute;
+            width: 20px;
+            height: 25px;
+            background: linear-gradient(to bottom, #dc143c, #b22222);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 
+                inset 0 0 10px rgba(255, 255, 255, 0.2),
+                0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .inner-petal-1 { top: 10px; left: 12px; transform: rotate(0deg); }
+        .inner-petal-2 { top: 8px; left: 22px; transform: rotate(45deg); }
+        .inner-petal-3 { top: 12px; left: 2px; transform: rotate(-45deg); }
+        
+        /* Pétalos medios */
+        .middle-petals {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            top: -5px;
+        }
+        
+        .middle-petal {
+            position: absolute;
+            width: 28px;
+            height: 32px;
+            background: linear-gradient(to bottom, #c71585, #dc143c);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 
+                inset 0 0 10px rgba(255, 255, 255, 0.2),
+                0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .middle-petal-1 { top: 15px; left: 16px; transform: rotate(0deg); }
+        .middle-petal-2 { top: 10px; left: 30px; transform: rotate(60deg); }
+        .middle-petal-3 { top: 10px; left: 2px; transform: rotate(-60deg); }
+        .middle-petal-4 { top: 25px; left: 5px; transform: rotate(-30deg); }
+        .middle-petal-5 { top: 25px; left: 27px; transform: rotate(30deg); }
+        
+        /* Pétalos externos (más grandes y abiertos) */
+        .outer-petals {
+            width: 75px;
+            height: 65px;
+            position: relative;
+            top: -15px;
+        }
+        
+        .outer-petal {
+            position: absolute;
+            width: 35px;
+            height: 38px;
+            background: linear-gradient(to bottom, #e75480, #c71585);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 
+                inset 0 0 10px rgba(255, 255, 255, 0.2),
+                0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .outer-petal-1 { top: 15px; left: 20px; transform: rotate(0deg); z-index: 1; }
+        .outer-petal-2 { top: 5px; left: 35px; transform: rotate(75deg); }
+        .outer-petal-3 { top: 5px; left: 5px; transform: rotate(-75deg); }
+        .outer-petal-4 { top: 30px; left: 10px; transform: rotate(-45deg); }
+        .outer-petal-5 { top: 30px; left: 30px; transform: rotate(45deg); }
+        
+        /* Hojas de la rosa */
+        .rose-leaf {
+            position: absolute;
+            background: linear-gradient(to bottom, #2b5e25, #3a7c31);
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .leaf-1 {
+            width: 20px;
+            height: 20px;
+            top: 45px;
+            left: -5px;
+            transform: rotate(45deg);
+        }
+        
+        .leaf-2 {
+            width: 18px;
+            height: 18px;
+            top: 65px;
+            right: -10px;
+            transform: rotate(-45deg);
+            border-radius: 0 50% 50% 50%;
+        }
+        
+        /* Tapa del frasco */
+        .jar-lid {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 18px;
+            background: linear-gradient(to bottom, #a68a64, #c8b188, #a68a64);
+            border-radius: 20px;
+            z-index: 2;
+            box-shadow: 
+                0 3px 10px rgba(0, 0, 0, 0.2),
+                inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Reflejos en el frasco */
+        .jar-reflection {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0) 100%);
+            border-radius: 50%;
+            transform: rotate(20deg);
+            z-index: 1;
+        }
+        
+        /* Burbujas en el agua */
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+            box-shadow: 
+                0 0 5px rgba(255, 255, 255, 0.5),
+                inset 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        .bubble-1 {
+            width: 10px;
+            height: 10px;
+            bottom: 40px;
+            left: 30px;
+            animation-delay: 0s;
+        }
+        
+        .bubble-2 {
+            width: 6px;
+            height: 6px;
+            bottom: 60px;
+            right: 35px;
+            animation-delay: 1.2s;
+        }
+        
+        .bubble-3 {
+            width: 8px;
+            height: 8px;
+            bottom: 85px;
+            left: 50px;
+            animation-delay: 2.5s;
+        }
+        
+        .bubble-4 {
+            width: 7px;
+            height: 7px;
+            bottom: 70px;
+            right: 25px;
+            animation-delay: 0.8s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-25px) scale(1.05);
+            }
+        }
+        
+        /* Animación sutil para la rosa */
+        @keyframes gentle-sway {
+            0%, 100% {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            50% {
+                transform: translateX(-50%) rotate(0.5deg);
+            }
+        }
+        
+        .rose-in-jar {
+            animation: gentle-sway 5s infinite ease-in-out;
+        }
+        
+        /* Estilo para el mensaje */
+        .message {
+            margin-top: 20px;
+        }
+        
+        .question {
+            font-size: 26px;
+            color: #c44569;
+            margin-bottom: 20px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        
+        .countdown {
+            font-size: 20px;
+            color: #555;
+            background-color: #fff0f3;
+            padding: 12px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 15px;
+            border: 1px dashed #e66767;
+        }
+        
+        .heart {
+            color: #e84393;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Estilo para los botones de respuesta */
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        
+        .btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-yes {
+            background: linear-gradient(to right, #78e08f, #38ada9);
+            color: white;
+        }
+        
+        .btn-yes:hover {
+            background: linear-gradient(to right, #5dc775, #2a8c87);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(120, 224, 143, 0.3);
+        }
+        
+        .btn-no {
+            background: linear-gradient(to right, #e15f41, #c44569);
+            color: white;
+        }
+        
+        .btn-no:hover {
+            background: linear-gradient(to right, #d14a2c, #b5345a);
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(229, 95, 65, 0.3);
+        }
+        
+        /* Instrucciones */
+        .instructions {
+            margin-top: 30px;
+            color: #888;
+            font-style: italic;
+            font-size: 16px;
+        }
+        
+        /* Efecto de pétalos de rosa cayendo */
+        .rose-petal-fall {
+            position: fixed;
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(to bottom, #ff9ff3, #f368e0);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            top: -10px;
+            opacity: 0;
+            z-index: 100;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes fall-petal {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.7;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .envelope {
+                width: 280px;
+                height: 190px;
+            }
+            
+            .envelope:before {
+                border-width: 95px 140px 0 140px;
+            }
+            
+            .envelope-flap {
+                border-left: 140px solid transparent;
+                border-right: 140px solid transparent;
+                border-top: 95px solid #cf6a6a;
+            }
+            
+            .letter {
+                width: 280px;
+                margin: -170px auto 30px;
+            }
+            
+            .question {
+                font-size: 22px;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 18px;
+            }
+            
+            .jar-container {
+                width: 180px;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+</body>
+    <div class="container">
+        <h1><i class="fas fa-heart heart"></i> Invitación Especial de San Valentín <i class="fas fa-heart heart"></i></h1>
+        
+        <div class="envelope" id="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-text">Ábreme</div>
+        </div>
+        
+        <div class="letter" id="letter">
+            <div class="jar-container">
+                <div class="jar">
+                    <div class="water">
+                        <div class="bubble bubble-1"></div>
+                        <div class="bubble bubble-2"></div>
+                        <div class="bubble bubble-3"></div>
+                        <div class="bubble bubble-4"></div>
+                    </div>
+                    <div class="jar-reflection"></div>
+                    <div class="rose-in-jar">
+                        <div class="rose-stem"></div>
+                        <div class="rose-leaf leaf-1"></div>
+                        <div class="rose-leaf leaf-2"></div>
+                        
+                        <div class="petal-layer inner-petals">
+                            <div class="inner-petal inner-petal-1"></div>
+                            <div class="inner-petal inner-petal-2"></div>
+                            <div class="inner-petal inner-petal-3"></div>
+                        </div>
+                        
+                        <div class="petal-layer middle-petals">
+                            <div class="middle-petal middle-petal-1"></div>
+                            <div class="middle-petal middle-petal-2"></div>
+                            <div class="middle-petal middle-petal-3"></div>
+                            <div class="middle-petal middle-petal-4"></div>
+                            <div class="middle-petal middle-petal-5"></div>
+                        </div>
+                        
+                        <div class="petal-layer outer-petals">
+                            <div class="outer-petal outer-petal-1"></div>
+                            <div class="outer-petal outer-petal-2"></div>
+                            <div class="outer-petal outer-petal-3"></div>
+                            <div class="outer-petal outer-petal-4"></div>
+                            <div class="outer-petal outer-petal-5"></div>
+                        </div>
+                        
+                        <div class="rose-center"></div>
+                    </div>
+                </div>
+                <div class="jar-lid"></div>
+            </div>
+            
+            <div class="message">
+                <div class="question">¿Quieres ser mi San Valentín?</div>
+                <div class="countdown">Faltan <span id="days">6</span> días <i class="fas fa-heart heart"></i></div>
+                
+                <div class="buttons">
+                    <button class="btn btn-yes" id="btnYes">¡Sí!</button>
+                    <button class="btn btn-no" id="btnNo">Tal vez</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">Haz clic en el sobre para abrir la invitación</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const envelope = document.getElementById('envelope');
+            const letter = document.getElementById('letter');
+            const btnYes = document.getElementById('btnYes');
+            const btnNo = document.getElementById('btnNo');
+            const daysElement = document.getElementById('days');
+            
+            // Calculamos los días restantes hasta el 14 de febrero
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            let valentinesDay = new Date(currentYear, 1, 14);
+            
+            // Si ya pasó el 14 de febrero este año, calculamos para el próximo año
+            if (today > valentinesDay) {
+                valentinesDay = new Date(currentYear + 1, 1, 14);
+            }
+            
+            // Calculamos la diferencia en días
+            const diffTime = valentinesDay - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Actualizamos el contador
+            daysElement.textContent = diffDays;
+            
+            // Función para abrir el sobre
+            envelope.addEventListener('click', function() {
+                envelope.classList.add('open');
+                
+                setTimeout(function() {
+                    letter.classList.add('show');
+                }, 600);
+            });
+            
+            // Función para crear pétalos de rosa cayendo
+            function createFallingPetals() {
+                const petalCount = 60;
+                
+                for (let i = 0; i < petalCount; i++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'rose-petal-fall';
+                    petal.style.left = Math.random() * 100 + 'vw';
+                    petal.style.width = Math.random() * 25 + 15 + 'px';
+                    petal.style.height = Math.random() * 25 + 15 + 'px';
+                    petal.style.opacity = Math.random() * 0.7 + 0.3;
+                    
+                    // Variar colores de los pétalos
+                    const hue = Math.random() * 20 + 330; // Tonos rosas/rojos
+                    petal.style.background = `linear-gradient(to bottom, 
+                        hsl(${hue}, 100%, 75%), 
+                        hsl(${hue}, 100%, 60%))`;
+                    
+                    const animationDuration = Math.random() * 4 + 3;
+                    petal.style.animation = `fall-petal ${animationDuration}s linear forwards`;
+                    
+                    document.body.appendChild(petal);
+                    
+                    // Eliminar el pétalo después de que termine la animación
+                    setTimeout(() => {
+                        petal.remove();
+                    }, animationDuration * 1000);
+                }
+            }
+            
+            // Función para hacer brillar la rosa
+            function makeRoseGlow() {
+                const roseCenter = document.querySelector('.rose-center');
+                const petals = document.querySelectorAll('.inner-petal, .middle-petal, .outer-petal');
+                
+                // Hacer brillar el centro
+                roseCenter.style.boxShadow = 
+                    '0 0 20px rgba(255, 215, 0, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.4)';
+                roseCenter.style.background = 'linear-gradient(45deg, #ff4500, #ff6347)';
+                
+                // Hacer brillar los pétalos
+                petals.forEach(petal => {
+                    petal.style.boxShadow = 
+                        'inset 0 0 15px rgba(255, 255, 255, 0.4), 0 0 15px rgba(255, 215, 0, 0.5)';
+                });
+                
+                // Agregar animación de pulso
+                roseCenter.style.animation = 'heartbeat 1s infinite';
+                
+                // Restaurar después de 3 segundos
+                setTimeout(() => {
+                    roseCenter.style.boxShadow = 
+                        '0 0 10px rgba(139, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2)';
+                    roseCenter.style.background = 'linear-gradient(45deg, #8b0000, #b22222)';
+                    roseCenter.style.animation = '';
+                    
+                    petals.forEach(petal => {
+                        petal.style.boxShadow = 
+                            'inset 0 0 10px rgba(255, 255, 255, 0.2), 0 3px 8px rgba(0, 0, 0, 0.2)';
+                    });
+                }, 3000);
+            }
+            
+            // Evento para el botón Sí
+            btnYes.addEventListener('click', function() {
+                document.querySelector('.question').innerHTML = '¡Sabía que dirías que sí! <i class="fas fa-heart heart"></i>';
+                document.querySelector('.buttons').innerHTML = '<div class="countdown">Nos vemos el 14 de febrero <i class="fas fa-heart heart"></i></div>';
+                
+                // Crear efectos especiales
+                createFallingPetals();
+                makeRoseGlow();
+                
+                // Agregar efecto de brillo al frasco
+                const jar = document.querySelector('.jar');
+                jar.style.boxShadow = 
+                    'inset 0 0 30px rgba(255, 215, 0, 0.4), 0 0 25px rgba(255, 215, 0, 0.4)';
+                
+                // Cambiar el agua a un color más festivo
+                const water = document.querySelector('.water');
+                water.style.background = 'linear-gradient(to bottom, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.5))';
+                
+                // Repetir pétalos cada 3 segundos
+                const petalInterval = setInterval(createFallingPetals, 3000);
+                
+                // Repetir brillo cada 5 segundos
+                const glowInterval = setInterval(makeRoseGlow, 5000);
+                
+                // Limpiar intervalos después de 20 segundos
+                setTimeout(() => {
+                    clearInterval(petalInterval);
+                    clearInterval(glowInterval);
+                }, 20000);
+            });
+            
+            // Evento para el botón No/Tal vez
+            btnNo.addEventListener('click', function() {
+                // Hacemos que el botón No se mueva cuando intentas hacer clic
+                const btnNoRect = btnNo.getBoundingClientRect();
+                const maxX = window.innerWidth - btnNoRect.width - 20;
+                const maxY = window.innerHeight - btnNoRect.height - 20;
+                
+                const randomX = Math.floor(Math.random() * maxX);
+                const randomY = Math.floor(Math.random() * maxY);
+                
+                btnNo.style.position = 'fixed';
+                btnNo.style.left = randomX + 'px';
+                btnNo.style.top = randomY + 'px';
+                
+                // Cambiamos el texto del botón Sí para ser más persuasivo
+                btnYes.innerHTML = '¡Por favor, di que sí! <i class="fas fa-heart heart"></i>';
+                btnYes.style.fontSize = '18px';
+                btnYes.style.padding = '12px 30px';
+                
+                // Hacer que la rosa se marchite temporalmente
+                const petals = document.querySelectorAll('.inner-petal, .middle-petal, .outer-petal');
+                petals.forEach(petal => {
+                    petal.style.transform += ' scale(0.9)';
+                    petal.style.opacity = '0.7';
+                });
+                
+                // Restaurar después de 1.5 segundos
+                setTimeout(() => {
+                    petals.forEach(petal => {
+                        petal.style.transform = petal.style.transform.replace(' scale(0.9)', '');
+                        petal.style.opacity = '1';
+                    });
+                }, 1500);
+                
+                // Después de 3 intentos, el botón No desaparece
+                let attempts = 0;
+                const originalBtnNoClick = btnNo.onclick;
+                btnNo.onclick = function() {
+                    attempts++;
+                    if (attempts >= 3) {
+                        btnNo.style.display = 'none';
+                        document.querySelector('.question').innerHTML = '¡El destino quiere que seas mi San Valentín! <i class="fas fa-heart heart"></i>';
+                        createFallingPetals();
+                        makeRoseGlow();
+                    } else {
+                        // Mover el botón de nuevo
+                        const newX = Math.floor(Math.random() * maxX);
+                        const newY = Math.floor(Math.random() * maxY);
+                        btnNo.style.left = newX + 'px';
+                        btnNo.style.top = newY + 'px';
+                    }
+                };
+            });
+            
+            // Permitir abrir la carta también haciendo clic en la pantalla (para dispositivos táctiles)
+            letter.addEventListener('click', function() {
+                if (!envelope.classList.contains('open')) {
+                    envelope.classList.add('open');
+                    
+                    setTimeout(function() {
+                        letter.classList.add('show');
+                    }, 600);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
